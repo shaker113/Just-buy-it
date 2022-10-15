@@ -79,6 +79,8 @@ class _NewShopConatinerState extends State<NewShopConatiner> {
                     width: double.infinity,
                     child: SafeArea(
                       child: UpdatingButton(
+                        discontAmount: "",
+                        wantDiscont: false,
                         collection: 'shops',
                         wantPrise: false,
                         price: "",
@@ -113,4 +115,3 @@ class _NewShopConatinerState extends State<NewShopConatiner> {
     );
   }
 }
-	

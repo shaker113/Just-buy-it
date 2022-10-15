@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'Widgets.dart';
 
 class NewItemContainer extends StatefulWidget {
-  String name;
-  String imageLink;
-  String city;
-  String category;
-  String price;
+  final String name;
+  final String imageLink;
+  final String city;
+  final String category;
+  final String price;
+  String discontAmount;
+
+  final bool discont;
+
   var id;
   NewItemContainer(
       {super.key,
@@ -17,7 +21,9 @@ class NewItemContainer extends StatefulWidget {
       required this.city,
       required this.imageLink,
       required this.name,
-      required this.price});
+      required this.price,
+      required this.discont,
+      required this.discontAmount});
 
   @override
   State<NewItemContainer> createState() => _NewItemContainerState();
@@ -26,6 +32,12 @@ class NewItemContainer extends StatefulWidget {
 class _NewItemContainerState extends State<NewItemContainer> {
   @override
   Widget build(BuildContext context) {
+    double newPrice;
+    widget.discont
+        ? newPrice = (1 - ((double.parse(widget.discontAmount)) / 100)) *
+            (double.parse(widget.price))
+        : newPrice = 0;
+
     return Container(
       margin: EdgeInsets.only(top: 10),
       width: double.infinity,
@@ -79,12 +91,30 @@ class _NewItemContainerState extends State<NewItemContainer> {
                           fontWeight: FontWeight.w700,
                           color: Colors.green),
                     ),
-                    Text(
-                      "${widget.price} JOD",
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.green),
+                    Column(
+                      children: [
+                        Text(
+                          "${widget.price} JOD",
+                          style: TextStyle(
+                              fontSize: 16,
+                              decoration: widget.discont
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                              fontWeight: FontWeight.w500,
+                              color:
+                                  widget.discont ? Colors.red : Colors.green),
+                        ),
+                        widget.discont
+                            ? Text(
+                                "${double.parse(newPrice.toStringAsFixed(2))} JOD",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.green,
+                                ),
+                              )
+                            : const SizedBox(),
+                      ],
                     ),
                     IconButton(
                       onPressed: () {
@@ -100,6 +130,8 @@ class _NewItemContainerState extends State<NewItemContainer> {
                               width: double.infinity,
                               child: SafeArea(
                                 child: UpdatingButton(
+                                  discontAmount: widget.discontAmount,
+                                  wantDiscont: widget.discont,
                                   collection: 'items',
                                   price: widget.price,
                                   wantPrise: true,

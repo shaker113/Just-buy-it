@@ -33,6 +33,7 @@ class _ItemsTabState extends State<ItemsTab> {
                     width: double.infinity,
                     child: SafeArea(
                       child: Adding(
+                        wantDiscont: true,
                         wantPrise: true,
                         collection: 'items',
                         title: "item",
@@ -69,6 +70,8 @@ class _ItemsTabState extends State<ItemsTab> {
                   final DocumentSnapshot documentSnapshot =
                       streamSnapShot.data!.docs[index];
                   return NewItemContainer(
+                    discontAmount: documentSnapshot['discontAmount'],
+                    discont: documentSnapshot['discont'],
                     price: documentSnapshot['price'],
                     id: documentSnapshot.id,
                     category: documentSnapshot['category'],

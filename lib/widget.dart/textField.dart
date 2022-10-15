@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // ignore: camel_case_types
 class customTextField extends StatefulWidget {
   final TextEditingController? TheController;
+  final List<TextInputFormatter>? theFormater;
+
   final TextInputType inputType;
   final String hint;
   bool visbleText;
@@ -12,7 +15,8 @@ class customTextField extends StatefulWidget {
       required this.visbleText,
       required this.inputType,
       // ignore: non_constant_identifier_names
-      this.TheController});
+      this.TheController,
+      this.theFormater});
 
   @override
   State<customTextField> createState() => _customTextFieldState();
@@ -24,6 +28,7 @@ class _customTextFieldState extends State<customTextField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      inputFormatters: widget.theFormater,
       controller: widget.TheController,
       textInputAction: TextInputAction.next,
       keyboardType: widget.inputType,

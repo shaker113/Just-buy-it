@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'Widgets.dart';
 
@@ -12,11 +13,15 @@ class UpdatingButton extends StatefulWidget {
   String imageLink;
   String name;
   bool wantPrise;
+  bool wantDiscont;
   String price;
   String collection;
+  String discontAmount;
 
   UpdatingButton(
       {super.key,
+      required this.wantDiscont,
+      required this.discontAmount,
       required this.Title,
       required this.id,
       required this.name,
@@ -54,7 +59,8 @@ class _UpdatingButtonState extends State<UpdatingButton> {
     imageLink.text = widget.imageLink;
     TextEditingController price = TextEditingController();
     price.text = widget.price;
-
+    TextEditingController discontAmount = TextEditingController();
+    discontAmount.text = widget.discontAmount;
     return StatefulBuilder(builder: (BuildContext context, setState) {
       return Padding(
         padding: const EdgeInsets.all(10),
@@ -94,15 +100,56 @@ class _UpdatingButtonState extends State<UpdatingButton> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Price"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(flex: 8, child: const Text("Price")),
+                      Expanded(flex: 1, child: const Text("Discont")),
+                      Switch(
+                          value: widget.wantDiscont,
+                          onChanged: (value) {
+                            setState(() {
+                              widget.wantDiscont = !widget.wantDiscont;
+                            });
+                          })
+                    ],
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  customTextField(
-                      TheController: price,
-                      hint: "Price",
-                      visbleText: false,
-                      inputType: TextInputType.number),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: widget.wantDiscont ? 2 : 99,
+                        child: customTextField(
+                            theFormater: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            TheController: price,
+                            hint: "Price",
+                            visbleText: false,
+                            inputType: const TextInputType.numberWithOptions(
+                                decimal: true)),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          flex: 1,
+                          child: widget.wantDiscont
+                              ? customTextField(
+                                  theFormater: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                  TheController: discontAmount,
+                                  hint: "Discont amount",
+                                  visbleText: false,
+                                  inputType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true))
+                              : const SizedBox())
+                    ],
+                  ),
                 ],
               ),
             const Text("category"),
@@ -166,7 +213,9 @@ class _UpdatingButtonState extends State<UpdatingButton> {
                         'city': chosenCity,
                         'category': chosenCategory,
                         'imageLink': imageLink.text,
-                        'price': price.text
+                        'price': price.text,
+                        'discont': widget.wantDiscont,
+                        'discontAmount': discontAmount.text
                       });
 
                       Navigator.pop(context);

@@ -31,7 +31,8 @@ class _ShopsTabState extends State<ShopsTab> {
                     height: 530,
                     width: double.infinity,
                     child: SafeArea(
-                      child: Adding(
+                      child: Adding(wantDiscont: false,
+                
                         wantPrise: false,
                         collection: 'shops',
                         title: "shop",

@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'Widgets.dart';
 
@@ -9,9 +10,12 @@ class Adding extends StatefulWidget {
   String title;
   String collection;
   bool wantPrise;
+  bool wantDiscont;
+
   Adding(
       {super.key,
       required this.title,
+      required this.wantDiscont,
       required this.collection,
       required this.wantPrise});
 
@@ -22,6 +26,7 @@ class Adding extends StatefulWidget {
 class _AddingState extends State<Adding> {
   TextEditingController name = TextEditingController();
   TextEditingController price = TextEditingController();
+  TextEditingController discontAmount = TextEditingController();
   TextEditingController imageLink = TextEditingController();
 
   @override
@@ -38,6 +43,7 @@ class _AddingState extends State<Adding> {
       "Men's Fashion",
       "Women's Fashion",
     ];
+    bool wantDiscont = false;
     String chosenCategory = "Cars and Bikes";
     return StatefulBuilder(builder: (BuildContext context, setState) {
       return Padding(
@@ -75,15 +81,56 @@ class _AddingState extends State<Adding> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Price"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(flex: 8, child: const Text("Price")),
+                      Expanded(flex: 1, child: const Text("Discont")),
+                      Switch(
+                          value: wantDiscont,
+                          onChanged: (value) {
+                            setState(() {
+                              wantDiscont = !wantDiscont;
+                            });
+                          })
+                    ],
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
-                  customTextField(
-                      TheController: price,
-                      hint: "Price",
-                      visbleText: false,
-                      inputType: TextInputType.number),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: wantDiscont ? 2 : 99,
+                        child: customTextField(
+                            theFormater: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            TheController: price,
+                            hint: "Price",
+                            visbleText: false,
+                            inputType: const TextInputType.numberWithOptions(
+                                decimal: true)),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          flex: 1,
+                          child: wantDiscont
+                              ? customTextField(
+                                  theFormater: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                  TheController: discontAmount,
+                                  hint: "Discont amount",
+                                  visbleText: false,
+                                  inputType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true))
+                              : const SizedBox())
+                    ],
+                  ),
                 ],
               ),
             const SizedBox(
@@ -144,6 +191,8 @@ class _AddingState extends State<Adding> {
                     theFunction: () {
                       try {
                         createUser(
+                            discont: wantDiscont,
+                            discontAmount: discontAmount.text,
                             price: price.text,
                             name: name.text,
                             city: chosenCity,
@@ -172,6 +221,8 @@ class _AddingState extends State<Adding> {
   Future createUser(
       {required String name,
       required String city,
+      required String discontAmount,
+      required bool discont,
       required String category,
       required String imageLink,
       required String price,
@@ -183,7 +234,9 @@ class _AddingState extends State<Adding> {
       'city': city,
       'price': price,
       'category': category,
-      'imageLink': imageLink
+      'imageLink': imageLink,
+      'discontAmount': discontAmount,
+      'discont': discont,
     }; //to Create doucumant
     await User.set(json);
   }
