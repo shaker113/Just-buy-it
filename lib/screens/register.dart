@@ -90,6 +90,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                         content: Text("sgind up successfully"),
                       ),
                     );
+                    Navigator.pushNamed(context, "login");
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
