@@ -24,7 +24,7 @@ class myTabText extends StatelessWidget {
     return Text(
       theText,
       style:
-          const TextStyle(fontSize: 20, height: 2, fontWeight: FontWeight.w600),
+          const TextStyle(fontSize: 18, height: 2, fontWeight: FontWeight.w600),
     );
   }
 }

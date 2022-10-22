@@ -29,7 +29,7 @@ class _ItemsTabState extends State<ItemsTab> {
                   backgroundColor: Colors.black54,
                   body: Container(
                     color: Colors.white,
-                    height: 610,
+                    height: 631,
                     width: double.infinity,
                     child: SafeArea(
                       child: Adding(

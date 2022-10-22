@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/secreens.dart';
 import 'Widgets.dart';
 
 class NewShopConatiner extends StatefulWidget {
@@ -66,50 +67,51 @@ class _NewShopConatinerState extends State<NewShopConatiner> {
               ],
             ),
           ),
-          IconButton(
-            onPressed: () {
-              showGeneralDialog(
-                context: context,
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    Scaffold(
-                  backgroundColor: Colors.black54,
-                  body: Container(
-                    color: Colors.white,
-                    height: 530,
-                    width: double.infinity,
-                    child: SafeArea(
-                      child: UpdatingButton(
-                        discontAmount: "",
-                        wantDiscont: false,
-                        collection: 'shops',
-                        wantPrise: false,
-                        price: "",
-                        category: widget.category,
-                        city: widget.city,
-                        imageLink: widget.imageLink,
-                        id: widget.id,
-                        name: widget.name,
-                        Title: "shop",
+          isAdmin == true
+              ? IconButton(
+                  onPressed: () {
+                    showGeneralDialog(
+                      context: context,
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          Scaffold(
+                        backgroundColor: Colors.black54,
+                        body: Container(
+                          color: Colors.white,
+                          height: 530,
+                          width: double.infinity,
+                          child: SafeArea(
+                            child: UpdatingButton(
+                              discontAmount: "",
+                              wantDiscont: false,
+                              collection: 'shops',
+                              wantPrise: false,
+                              price: "",
+                              category: widget.category,
+                              city: widget.city,
+                              imageLink: widget.imageLink,
+                              id: widget.id,
+                              name: widget.name,
+                              Title: "shop",
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              );
-            },
-            icon: const Icon(Icons.edit),
-          ),
-          IconButton(
-            onPressed: () {
-              final docUser =
-                  FirebaseFirestore.instance.collection('shops').doc(widget.id);
-              docUser.delete();
-            },
-            icon: const Icon(Icons.delete),
-          ),
-          const Icon(
-            Icons.arrow_forward,
-            size: 26,
-          )
+                    );
+                  },
+                  icon: const Icon(Icons.edit),
+                )
+              : const SizedBox(),
+          isAdmin == true
+              ? IconButton(
+                  onPressed: () {
+                    final docUser = FirebaseFirestore.instance
+                        .collection('shops')
+                        .doc(widget.id);
+                    docUser.delete();
+                  },
+                  icon: const Icon(Icons.delete),
+                )
+              : const SizedBox(),
         ],
       ),
     );

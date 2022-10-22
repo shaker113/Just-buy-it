@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/screens/homePage.dart';
 
 import 'Widgets.dart';
 
@@ -10,10 +12,8 @@ class NewItemContainer extends StatefulWidget {
   final String category;
   final String price;
   String discontAmount;
-
   final bool discont;
-
-  var id;
+  String id;
   NewItemContainer(
       {super.key,
       required this.id,
@@ -37,6 +37,27 @@ class _NewItemContainerState extends State<NewItemContainer> {
         ? newPrice = (1 - ((double.parse(widget.discontAmount)) / 100)) *
             (double.parse(widget.price))
         : newPrice = 0;
+    String? username;
+    getUserName() async {
+      DocumentSnapshot userinfo = await FirebaseFirestore.instance
+          .collection('items')
+          .doc(widget.id)
+          .get();
+      String userid = userinfo['id'];
+      DocumentSnapshot userinfo1 =
+          await FirebaseFirestore.instance.collection('user').doc(userid).get();
+      print(userinfo1['name']);
+
+      setState(() {
+        username = userinfo1['name'];
+      });
+    }
+
+    // @override
+    // void initState() {
+    //   getUserName();
+    //   super.initState();
+    // }
 
     return Container(
       margin: EdgeInsets.only(top: 10),
@@ -71,12 +92,14 @@ class _NewItemContainerState extends State<NewItemContainer> {
                       fontWeight: FontWeight.w600,
                       color: Colors.black),
                 ),
-                Text(widget.category,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.shade700)),
-                Text(widget.city,
+                username != null
+                    ? Text("seller : ${username}}",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade800))
+                    : SizedBox(),
+                Text("${widget.city}|${widget.category}",
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -85,7 +108,7 @@ class _NewItemContainerState extends State<NewItemContainer> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      "BUY NOW",
+                      "BUY",
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -116,48 +139,52 @@ class _NewItemContainerState extends State<NewItemContainer> {
                             : const SizedBox(),
                       ],
                     ),
-                    IconButton(
-                      onPressed: () {
-                        showGeneralDialog(
-                          context: context,
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  Scaffold(
-                            backgroundColor: Colors.black54,
-                            body: Container(
-                              color: Colors.white,
-                              height: 610,
-                              width: double.infinity,
-                              child: SafeArea(
-                                child: UpdatingButton(
-                                  discontAmount: widget.discontAmount,
-                                  wantDiscont: widget.discont,
-                                  collection: 'items',
-                                  price: widget.price,
-                                  wantPrise: true,
-                                  category: widget.category,
-                                  city: widget.city,
-                                  imageLink: widget.imageLink,
-                                  id: widget.id,
-                                  name: widget.name,
-                                  Title: "item",
+                    isAdmin == true
+                        ? IconButton(
+                            onPressed: () {
+                              showGeneralDialog(
+                                context: context,
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        Scaffold(
+                                  backgroundColor: Colors.black54,
+                                  body: Container(
+                                    color: Colors.white,
+                                    height: 631,
+                                    width: double.infinity,
+                                    child: SafeArea(
+                                      child: UpdatingButton(
+                                        discontAmount: widget.discontAmount,
+                                        wantDiscont: widget.discont,
+                                        collection: 'items',
+                                        price: widget.price,
+                                        wantPrise: true,
+                                        category: widget.category,
+                                        city: widget.city,
+                                        imageLink: widget.imageLink,
+                                        id: widget.id,
+                                        name: widget.name,
+                                        Title: "item",
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.edit),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        final docUser = FirebaseFirestore.instance
-                            .collection('items')
-                            .doc(widget.id);
-                        docUser.delete();
-                      },
-                      icon: const Icon(Icons.delete),
-                    ),
+                              );
+                            },
+                            icon: const Icon(Icons.edit),
+                          )
+                        : const SizedBox(),
+                    isAdmin == true
+                        ? IconButton(
+                            onPressed: () {
+                              final docUser = FirebaseFirestore.instance
+                                  .collection('items')
+                                  .doc(widget.id);
+                              docUser.delete();
+                            },
+                            icon: const Icon(Icons.delete),
+                          )
+                        : const SizedBox(),
                   ],
                 )
               ],

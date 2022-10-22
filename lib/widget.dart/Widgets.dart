@@ -6,3 +6,4 @@ export 'newItemContainer.dart';
 export 'newShopContainer.dart';
 export 'addingButton.dart';
 export 'updatingscreen.dart';
+export 'sign_in_with_google.dart';

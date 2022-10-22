@@ -80,3 +80,30 @@ class customAddElevatedBotton extends StatelessWidget {
     );
   }
 }
+
+class customAdminElevatedBotton extends StatelessWidget {
+  final String theText;
+  final Function() theFunction;
+  customAdminElevatedBotton(
+      {super.key, required this.theFunction, required this.theText});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 113, 143, 224),
+          fixedSize: const Size(170, 50),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
+      onPressed: theFunction,
+      child: Text(
+        theText,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}

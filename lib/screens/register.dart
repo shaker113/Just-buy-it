@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/widget.dart/Widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +16,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   TextEditingController Email = TextEditingController();
   TextEditingController PassWord = TextEditingController();
   TextEditingController PassWordAgain = TextEditingController();
+  TextEditingController Name = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class RegisterScreenState extends State<RegisterScreen> {
             ),
             const myText(theText: "Name"),
             customTextField(
+              TheController: Name,
               visbleText: false,
               hint: "Enter your first name...",
               inputType: TextInputType.name,
@@ -83,11 +86,24 @@ class RegisterScreenState extends State<RegisterScreen> {
                     var authenticationObject = FirebaseAuth.instance;
                     UserCredential myUser = await authenticationObject
                         .createUserWithEmailAndPassword(
-                            email: Email.text, password: PassWord.text);
+                      email: Email.text,
+                      password: PassWord.text,
+                    );
                     // ignore: use_build_context_synchronously
+                    if (myUser.user?.emailVerified == false) {
+                      User? user = FirebaseAuth.instance.currentUser;
+                      await user?.sendEmailVerification();
+                    }
+
+                    saveAcount(
+                        name: Name.text,
+                        id: FirebaseAuth.instance.currentUser?.uid,
+                        email: Email.text);
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("sgind up successfully"),
+                        content: Text(
+                            "please verify your email to complete the signup process"),
                       ),
                     );
                     Navigator.pushNamed(context, "login");
@@ -98,6 +114,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                             "The email address is already in use by another account."),
                       ),
                     );
+                    print(e);
                   }
                 } else {
                   showDialog(
@@ -131,5 +148,21 @@ class RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  Future saveAcount(
+      {required String name,
+      required String? id,
+      required String email}) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    final myUser = FirebaseFirestore.instance.collection('user').doc(user?.uid);
+
+    final json = {
+      'role': "user",
+      'id': id,
+      'name': name,
+      'email': email,
+    }; //to Create doucumant
+    await myUser.set(json);
   }
 }

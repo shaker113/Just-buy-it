@@ -103,7 +103,7 @@ class _UpdatingButtonState extends State<UpdatingButton> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(flex: 8, child: const Text("Price")),
+                      Expanded(flex: 5, child: const Text("Price")),
                       Expanded(flex: 1, child: const Text("Discont")),
                       Switch(
                           value: widget.wantDiscont,
@@ -203,7 +203,7 @@ class _UpdatingButtonState extends State<UpdatingButton> {
                       Navigator.pop(context);
                     },
                     theText: "Back"),
-                customAddElevatedBotton(
+                customAdminElevatedBotton(
                     theFunction: () {
                       final docUser = FirebaseFirestore.instance
                           .collection(widget.collection)
