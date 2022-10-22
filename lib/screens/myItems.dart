@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../widget.dart/Widgets.dart';
@@ -199,7 +200,7 @@ class _MyNewItemContainerState extends State<MyNewItemContainer> {
                             backgroundColor: Colors.black54,
                             body: Container(
                               color: Colors.white,
-                              height: 631,
+                              // height: 631,
                               width: double.infinity,
                               child: SafeArea(
                                 child: UpdatingButton(
@@ -228,6 +229,9 @@ class _MyNewItemContainerState extends State<MyNewItemContainer> {
                             .collection('items')
                             .doc(widget.id);
                         docUser.delete();
+                        FirebaseStorage.instance
+                            .refFromURL(widget.imageLink)
+                            .delete();
                       },
                       icon: const Icon(Icons.delete),
                     )

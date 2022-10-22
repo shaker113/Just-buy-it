@@ -1,8 +1,11 @@
+import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 import 'Widgets.dart';
 
 class UpdatingButton extends StatefulWidget {
@@ -50,6 +53,9 @@ class _UpdatingButtonState extends State<UpdatingButton> {
     "Women's Fashion",
   ];
   late String chosenCategory = widget.category;
+  File? image;
+  var imagepiker = ImagePicker();
+  var storgeRef;
 
   @override
   Widget build(BuildContext context) {
@@ -84,18 +90,46 @@ class _UpdatingButtonState extends State<UpdatingButton> {
             const SizedBox(
               height: 10,
             ),
-            const Text("image Link"),
+            const Text("image"),
             const SizedBox(
               height: 10,
             ),
-            customTextField(
-                TheController: imageLink,
-                hint: "image link",
-                visbleText: false,
-                inputType: TextInputType.name),
+            Center(
+              child: customAddElevatedBotton(
+                  theFunction: () async {
+                    var random = Random().nextInt(1000000000);
+                    var imagepiked =
+                        await imagepiker.pickImage(source: ImageSource.gallery);
+                    if (imagepiked != null) {
+                      setState(
+                        () {
+                          image = File(imagepiked.path);
+                        },
+                      );
+
+                      var imageName = basename(imagepiked.path);
+                      storgeRef = FirebaseStorage.instance
+                          .ref("images/$random$imageName");
+                    }
+                  },
+                  theText: "Upload an image"),
+            ),
             const SizedBox(
               height: 10,
             ),
+            image != null
+                ? Image.file(
+                    image!,
+                    height: 190,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                : Image(
+                    image: NetworkImage(widget.imageLink),
+                    height: 190,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
             if (widget.wantPrise)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +238,9 @@ class _UpdatingButtonState extends State<UpdatingButton> {
                     },
                     theText: "Back"),
                 customAdminElevatedBotton(
-                    theFunction: () {
+                    theFunction: () async {
+                      await storgeRef.putFile(image!);
+                      var imageUrl = await storgeRef.getDownloadURL();
                       final docUser = FirebaseFirestore.instance
                           .collection(widget.collection)
                           .doc(widget.id);
@@ -212,7 +248,7 @@ class _UpdatingButtonState extends State<UpdatingButton> {
                         'name': name.text,
                         'city': chosenCity,
                         'category': chosenCategory,
-                        'imageLink': imageLink.text,
+                        'imageLink': imageUrl,
                         'price': price.text,
                         'discont': widget.wantDiscont,
                         'discontAmount': discontAmount.text

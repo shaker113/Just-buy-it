@@ -1,11 +1,14 @@
 // ignore_for_file: non_constant_identifier_names
-
+import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'Widgets.dart';
+import 'package:path/path.dart';
 
 class Adding extends StatefulWidget {
   String title;
@@ -29,6 +32,23 @@ class _AddingState extends State<Adding> {
   TextEditingController price = TextEditingController();
   TextEditingController discontAmount = TextEditingController();
   TextEditingController imageLink = TextEditingController();
+  File? image;
+  var imagepiker = ImagePicker();
+  var storgeRef;
+
+  // uploadImage() async {
+  //   var imagepiked = await imagepiker.pickImage(source: ImageSource.gallery);
+  //   if (imagepiked != null) {
+  //     var random = Random().nextInt(1000000000);
+  //     file = File(imagepiked.path);
+  //     var imageName = basename(imagepiked.path);
+  //     var storgeRef = FirebaseStorage.instance.ref("images/$random$imageName");
+  //     await storgeRef.putFile(file!);
+  //     var imageUrl = await storgeRef.getDownloadURL();
+  //     print(imageUrl);
+  //   } else
+  //     print("wrog");
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -71,15 +91,41 @@ class _AddingState extends State<Adding> {
               const SizedBox(
                 height: 10,
               ),
-              const Text("image Link"),
+              const Text("image"),
               const SizedBox(
                 height: 10,
               ),
-              customTextField(
-                  TheController: imageLink,
-                  hint: "image link",
-                  visbleText: false,
-                  inputType: TextInputType.name),
+              Center(
+                child: customAddElevatedBotton(
+                    theFunction: () async {
+                      var random = Random().nextInt(1000000000);
+                      var imagepiked = await imagepiker.pickImage(
+                          source: ImageSource.gallery);
+                      if (imagepiked != null) {
+                        setState(
+                          () {
+                            image = File(imagepiked.path);
+                          },
+                        );
+
+                        var imageName = basename(imagepiked.path);
+                        storgeRef = FirebaseStorage.instance
+                            .ref("images/$random$imageName");
+                      }
+                    },
+                    theText: "Upload an image"),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              image != null
+                  ? Image.file(
+                      image!,
+                      height: 190,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : const Center(child: Text("No image has uploaded yet")),
               if (widget.wantPrise)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,8 +133,8 @@ class _AddingState extends State<Adding> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(flex: 5, child: const Text("Price")),
-                        Expanded(flex: 1, child: const Text("Discont")),
+                        const Expanded(flex: 5, child: Text("Price")),
+                        const Expanded(flex: 1, child: Text("Discont")),
                         Switch(
                             value: wantDiscont,
                             onChanged: (value) {
@@ -99,7 +145,7 @@ class _AddingState extends State<Adding> {
                       ],
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     Row(
                       children: [
@@ -115,8 +161,8 @@ class _AddingState extends State<Adding> {
                               inputType: const TextInputType.numberWithOptions(
                                   decimal: true)),
                         ),
-                        const SizedBox(
-                          width: 10,
+                        SizedBox(
+                          width: wantDiscont ? 10 : 0,
                         ),
                         Expanded(
                             flex: 1,
@@ -137,7 +183,7 @@ class _AddingState extends State<Adding> {
                   ],
                 ),
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
               const Text("category"),
               const SizedBox(
@@ -191,8 +237,10 @@ class _AddingState extends State<Adding> {
                       },
                       theText: "Back"),
                   customAdminElevatedBotton(
-                      theFunction: () {
+                      theFunction: () async {
                         try {
+                          await storgeRef.putFile(image!);
+                          var imageUrl = await storgeRef.getDownloadURL();
                           createUser(
                               id: FirebaseAuth.instance.currentUser?.uid,
                               discont: wantDiscont,
@@ -201,7 +249,7 @@ class _AddingState extends State<Adding> {
                               name: name.text,
                               city: chosenCity,
                               category: chosenCategory,
-                              imageLink: imageLink.text,
+                              imageLink: imageUrl,
                               collection: widget.collection);
                         } catch (e) {
                           print(e);
@@ -216,7 +264,7 @@ class _AddingState extends State<Adding> {
                       },
                       theText: "Add your ${widget.title}")
                 ],
-              )
+              ),
             ],
           ),
         );

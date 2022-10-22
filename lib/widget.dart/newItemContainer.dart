@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/screens/homePage.dart';
 
@@ -37,26 +38,19 @@ class _NewItemContainerState extends State<NewItemContainer> {
         ? newPrice = (1 - ((double.parse(widget.discontAmount)) / 100)) *
             (double.parse(widget.price))
         : newPrice = 0;
-    String? username;
-    getUserName() async {
-      DocumentSnapshot userinfo = await FirebaseFirestore.instance
-          .collection('items')
-          .doc(widget.id)
-          .get();
-      String userid = userinfo['id'];
-      DocumentSnapshot userinfo1 =
-          await FirebaseFirestore.instance.collection('user').doc(userid).get();
-      print(userinfo1['name']);
 
-      setState(() {
-        username = userinfo1['name'];
-      });
-    }
+    // getUserName() async {
+    //   DocumentSnapshot userinfo = await FirebaseFirestore.instance
+    //       .collection('items')
+    //       .doc(widget.id)
+    //       .get();
+    //   String userid = userinfo['id'];
+    //   DocumentSnapshot userinfo1 =
+    //       await FirebaseFirestore.instance.collection('user').doc(userid).get();
+    //   print(userinfo1['name']);
 
-    // @override
-    // void initState() {
-    //   getUserName();
-    //   super.initState();
+    //   String username = await userinfo1['name'];
+    //   return username;
     // }
 
     return Container(
@@ -92,13 +86,11 @@ class _NewItemContainerState extends State<NewItemContainer> {
                       fontWeight: FontWeight.w600,
                       color: Colors.black),
                 ),
-                username != null
-                    ? Text("seller : ${username}}",
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade800))
-                    : SizedBox(),
+                // Text("seller :${getUserName()} ",
+                //     style: TextStyle(
+                //       fontSize: 14,
+                //       fontWeight: FontWeight.w500,
+                //     )),
                 Text("${widget.city}|${widget.category}",
                     style: TextStyle(
                         fontSize: 14,
@@ -150,7 +142,7 @@ class _NewItemContainerState extends State<NewItemContainer> {
                                   backgroundColor: Colors.black54,
                                   body: Container(
                                     color: Colors.white,
-                                    height: 631,
+                                    // height: 631,
                                     width: double.infinity,
                                     child: SafeArea(
                                       child: UpdatingButton(
@@ -181,6 +173,8 @@ class _NewItemContainerState extends State<NewItemContainer> {
                                   .collection('items')
                                   .doc(widget.id);
                               docUser.delete();
+                              FirebaseStorage.instance
+                                  .refFromURL(widget.imageLink).delete();
                             },
                             icon: const Icon(Icons.delete),
                           )

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/secreens.dart';
@@ -77,7 +78,7 @@ class _NewShopConatinerState extends State<NewShopConatiner> {
                         backgroundColor: Colors.black54,
                         body: Container(
                           color: Colors.white,
-                          height: 530,
+                          // height: 530,
                           width: double.infinity,
                           child: SafeArea(
                             child: UpdatingButton(
@@ -108,6 +109,9 @@ class _NewShopConatinerState extends State<NewShopConatiner> {
                         .collection('shops')
                         .doc(widget.id);
                     docUser.delete();
+                    FirebaseStorage.instance
+                        .refFromURL(widget.imageLink)
+                        .delete();
                   },
                   icon: const Icon(Icons.delete),
                 )

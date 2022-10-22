@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../widget.dart/Widgets.dart';
@@ -144,7 +145,7 @@ class _MYNewShopConatinerState extends State<MYNewShopConatiner> {
                   backgroundColor: Colors.black54,
                   body: Container(
                     color: Colors.white,
-                    height: 530,
+                    // height: 530,
                     width: double.infinity,
                     child: SafeArea(
                       child: UpdatingButton(
@@ -172,6 +173,7 @@ class _MYNewShopConatinerState extends State<MYNewShopConatiner> {
               final docUser =
                   FirebaseFirestore.instance.collection('shops').doc(widget.id);
               docUser.delete();
+              FirebaseStorage.instance.refFromURL(widget.imageLink).delete();
             },
             icon: const Icon(Icons.delete),
           ),

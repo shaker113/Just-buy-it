@@ -28,11 +28,11 @@ class _ShopsTabState extends State<ShopsTab> {
                   backgroundColor: Colors.black54,
                   body: Container(
                     color: Colors.white,
-                    height: 530,
+                    // height: 530,
                     width: double.infinity,
                     child: SafeArea(
-                      child: Adding(wantDiscont: false,
-                
+                      child: Adding(
+                        wantDiscont: false,
                         wantPrise: false,
                         collection: 'shops',
                         title: "shop",
