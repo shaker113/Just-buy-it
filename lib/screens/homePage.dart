@@ -13,7 +13,7 @@ void checkRole() async {
       await FirebaseFirestore.instance.collection('user').doc(user?.uid).get();
   String userRole = userInfo['role'];
   userRole == "admin" ? isAdmin = true : isAdmin = false;
-  print(isAdmin);
+
 }
 
 class HomeScreen extends StatefulWidget {

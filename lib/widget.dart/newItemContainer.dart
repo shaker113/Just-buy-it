@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/screens/homePage.dart';
@@ -8,6 +7,7 @@ import 'Widgets.dart';
 
 class NewItemContainer extends StatefulWidget {
   final String name;
+
   final String imageLink;
   final String city;
   final String category;
@@ -22,6 +22,7 @@ class NewItemContainer extends StatefulWidget {
       required this.city,
       required this.imageLink,
       required this.name,
+     
       required this.price,
       required this.discont,
       required this.discontAmount});
@@ -38,7 +39,7 @@ class _NewItemContainerState extends State<NewItemContainer> {
         ? newPrice = (1 - ((double.parse(widget.discontAmount)) / 100)) *
             (double.parse(widget.price))
         : newPrice = 0;
-
+    // String? username;
     // getUserName() async {
     //   DocumentSnapshot userinfo = await FirebaseFirestore.instance
     //       .collection('items')
@@ -47,10 +48,16 @@ class _NewItemContainerState extends State<NewItemContainer> {
     //   String userid = userinfo['id'];
     //   DocumentSnapshot userinfo1 =
     //       await FirebaseFirestore.instance.collection('user').doc(userid).get();
-    //   print(userinfo1['name']);
+    //   setState(() {
+    //     username = userinfo1['name'];
+    //   });
+    //   print(username);
+    // }
 
-    //   String username = await userinfo1['name'];
-    //   return username;
+    // @override
+    // void initState() {
+    //   getUserName();
+    //   super.initState();
     // }
 
     return Container(
@@ -86,8 +93,8 @@ class _NewItemContainerState extends State<NewItemContainer> {
                       fontWeight: FontWeight.w600,
                       color: Colors.black),
                 ),
-                // Text("seller :${getUserName()} ",
-                //     style: TextStyle(
+                // Text("seller :",
+                //     style: const TextStyle(
                 //       fontSize: 14,
                 //       fontWeight: FontWeight.w500,
                 //     )),
@@ -174,7 +181,8 @@ class _NewItemContainerState extends State<NewItemContainer> {
                                   .doc(widget.id);
                               docUser.delete();
                               FirebaseStorage.instance
-                                  .refFromURL(widget.imageLink).delete();
+                                  .refFromURL(widget.imageLink)
+                                  .delete();
                             },
                             icon: const Icon(Icons.delete),
                           )

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, duplicate_ignore, unused_local_variable
+// ignore_for_file: use_build_context_synchronously, duplicate_ignore, unused_local_variable, non_constant_identifier_names
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widget.dart/Widgets.dart';
@@ -132,12 +132,10 @@ class LogInScreen extends StatelessWidget {
               ],
             ),
             GoogleLogInButton("Sign in with your Google ", () async {
-              try {
+          
                 var user = await signInWithGoogle();
                 Navigator.pushNamed(context, "HomeScreen");
-              } catch (e) {
-                print(e);
-              }
+            
             }),
             const SizedBox(
               height: 50,

@@ -69,6 +69,7 @@ class _ItemsTabState extends State<ItemsTab> {
                 itemBuilder: (BuildContext context, int index) {
                   final DocumentSnapshot documentSnapshot =
                       streamSnapShot.data!.docs[index];
+
                   return NewItemContainer(
                     discontAmount: documentSnapshot['discontAmount'],
                     discont: documentSnapshot['discont'],

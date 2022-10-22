@@ -12,10 +12,10 @@ Future<void> main() async {
   var user = FirebaseAuth.instance.currentUser;
   if (user == null) {
     isLogin = false;
-    print(user);
+   
   } else {
     isLogin = true;
-    print(user.email);
+   
   }
 
   runApp(

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, must_be_immutable, prefer_typing_uninitialized_variables
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -20,7 +22,7 @@ class _MyItemsState extends State<MyItems> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 113, 143, 224),
-        title: Text("Your added Items"),
+        title: const Text("Your added Items"),
       ),
       body: SafeArea(
         child: ListView(
@@ -36,7 +38,7 @@ class _MyItemsState extends State<MyItems> {
                 if (streamSnapShot.hasData) {
                   return ListView.separated(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: streamSnapShot.data!.docs.length,
                     separatorBuilder: (BuildContext context, int index) {
                       return const Divider(
@@ -113,7 +115,7 @@ class _MyNewItemContainerState extends State<MyNewItemContainer> {
         : newPrice = 0;
 
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       width: double.infinity,
       height: 170,
       padding: const EdgeInsets.all(10),
