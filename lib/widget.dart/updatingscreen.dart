@@ -239,8 +239,11 @@ class _UpdatingButtonState extends State<UpdatingButton> {
                     theText: "Back"),
                 customAdminElevatedBotton(
                     theFunction: () async {
-                      await storgeRef.putFile(image!);
-                      var imageUrl = await storgeRef.getDownloadURL();
+                      String? imageUrl;
+                      if (image != null) {
+                        await storgeRef.putFile(image);
+                        imageUrl = await storgeRef.getDownloadURL();
+                      }
                       final docUser = FirebaseFirestore.instance
                           .collection(widget.collection)
                           .doc(widget.id);
@@ -248,12 +251,17 @@ class _UpdatingButtonState extends State<UpdatingButton> {
                         'name': name.text,
                         'city': chosenCity,
                         'category': chosenCategory,
-                        'imageLink': imageUrl,
+                        'imageLink':
+                            image != null ? imageUrl : widget.imageLink,
                         'price': price.text,
                         'discont': widget.wantDiscont,
                         'discontAmount': discontAmount.text
                       });
-
+                      if (image != null) {
+                        FirebaseStorage.instance
+                            .refFromURL(widget.imageLink)
+                            .delete();
+                      }
                       Navigator.pop(context);
                     },
                     theText: "Update your ${widget.Title}")
