@@ -35,21 +35,6 @@ class _AddingState extends State<Adding> {
   File? image;
   var imagepiker = ImagePicker();
   var storgeRef;
-
-  // uploadImage() async {
-  //   var imagepiked = await imagepiker.pickImage(source: ImageSource.gallery);
-  //   if (imagepiked != null) {
-  //     var random = Random().nextInt(1000000000);
-  //     file = File(imagepiked.path);
-  //     var imageName = basename(imagepiked.path);
-  //     var storgeRef = FirebaseStorage.instance.ref("images/$random$imageName");
-  //     await storgeRef.putFile(file!);
-  //     var imageUrl = await storgeRef.getDownloadURL();
-  //     print(imageUrl);
-  //   } else
-  //     print("wrog");
-  // }
-
   @override
   Widget build(BuildContext context) {
     List citys = ["Amman", "Aqaba", "Irbid", "Zarqa", "Madaba", "Jerash"];

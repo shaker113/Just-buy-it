@@ -22,7 +22,6 @@ class NewItemContainer extends StatefulWidget {
       required this.city,
       required this.imageLink,
       required this.name,
-     
       required this.price,
       required this.discont,
       required this.discontAmount});
@@ -32,6 +31,25 @@ class NewItemContainer extends StatefulWidget {
 }
 
 class _NewItemContainerState extends State<NewItemContainer> {
+  String? username;
+  CollectionReference user = FirebaseFirestore.instance.collection("user");
+  CollectionReference items = FirebaseFirestore.instance.collection("items");
+
+  getUserName() async {
+    DocumentSnapshot userinfo = await items.doc(widget.id).get();
+    String userid = userinfo['id'];
+    DocumentSnapshot userinfo1 = await user.doc(userid).get();
+    setState(() {
+      username = userinfo1['name'];
+    });
+  }
+
+  @override
+  void initState() {
+    getUserName();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double newPrice;
@@ -39,26 +57,6 @@ class _NewItemContainerState extends State<NewItemContainer> {
         ? newPrice = (1 - ((double.parse(widget.discontAmount)) / 100)) *
             (double.parse(widget.price))
         : newPrice = 0;
-    // String? username;
-    // getUserName() async {
-    //   DocumentSnapshot userinfo = await FirebaseFirestore.instance
-    //       .collection('items')
-    //       .doc(widget.id)
-    //       .get();
-    //   String userid = userinfo['id'];
-    //   DocumentSnapshot userinfo1 =
-    //       await FirebaseFirestore.instance.collection('user').doc(userid).get();
-    //   setState(() {
-    //     username = userinfo1['name'];
-    //   });
-    //   print(username);
-    // }
-
-    // @override
-    // void initState() {
-    //   getUserName();
-    //   super.initState();
-    // }
 
     return Container(
       margin: EdgeInsets.only(top: 10),
@@ -93,11 +91,13 @@ class _NewItemContainerState extends State<NewItemContainer> {
                       fontWeight: FontWeight.w600,
                       color: Colors.black),
                 ),
-                // Text("seller :",
-                //     style: const TextStyle(
-                //       fontSize: 14,
-                //       fontWeight: FontWeight.w500,
-                //     )),
+                username != null
+                    ? Text("seller :$username",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ))
+                    : const SizedBox(),
                 Text("${widget.city}|${widget.category}",
                     style: TextStyle(
                         fontSize: 14,

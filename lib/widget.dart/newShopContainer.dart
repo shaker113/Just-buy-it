@@ -24,12 +24,32 @@ class NewShopConatiner extends StatefulWidget {
 }
 
 class _NewShopConatinerState extends State<NewShopConatiner> {
+  String? username;
+  CollectionReference user = FirebaseFirestore.instance.collection("user");
+  CollectionReference shops = FirebaseFirestore.instance.collection("shops");
+
+  getUserName() async {
+    DocumentSnapshot userinfo = await shops.doc(widget.id).get();
+    String userid = userinfo['id'];
+    DocumentSnapshot userinfo1 = await user.doc(userid).get();
+    setState(() {
+      username = userinfo1['name'];
+    });
+    print(username);
+  }
+
+  @override
+  void initState() {
+    getUserName();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10),
       width: double.infinity,
-      height: 100,
+      height: 110,
       padding: const EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -60,9 +80,18 @@ class _NewShopConatinerState extends State<NewShopConatiner> {
                       fontWeight: FontWeight.w600,
                       color: Colors.black),
                 ),
+                username != null
+                    ? Text("seller :$username",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ))
+                    : const SizedBox(),
                 Text("${widget.city}|${widget.category}",
+                    maxLines: 1,
                     style: TextStyle(
                         fontSize: 14,
+                        overflow: TextOverflow.ellipsis,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey.shade700)),
               ],

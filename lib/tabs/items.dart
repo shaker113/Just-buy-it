@@ -57,13 +57,16 @@ class _ItemsTabState extends State<ItemsTab> {
             if (streamSnapShot.hasData) {
               return ListView.separated(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: streamSnapShot.data!.docs.length,
                 separatorBuilder: (BuildContext context, int index) {
-                  return const Divider(
-                    height: 5,
-                    thickness: 2,
-                    color: Colors.grey,
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Divider(
+                      height: 5,
+                      thickness: 2,
+                      color: Colors.grey,
+                    ),
                   );
                 },
                 itemBuilder: (BuildContext context, int index) {

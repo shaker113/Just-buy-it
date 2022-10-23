@@ -129,7 +129,9 @@ class _MYNewShopConatinerState extends State<MYNewShopConatiner> {
                       color: Colors.black),
                 ),
                 Text("${widget.city}|${widget.category}",
+                    maxLines: 1,
                     style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey.shade700)),
