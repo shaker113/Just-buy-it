@@ -35,7 +35,6 @@ class _NewShopConatinerState extends State<NewShopConatiner> {
     setState(() {
       username = userinfo1['name'];
     });
-    print(username);
   }
 
   @override
@@ -47,7 +46,7 @@ class _NewShopConatinerState extends State<NewShopConatiner> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       width: double.infinity,
       height: 110,
       padding: const EdgeInsets.all(10),

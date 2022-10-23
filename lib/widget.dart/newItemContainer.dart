@@ -53,13 +53,20 @@ class _NewItemContainerState extends State<NewItemContainer> {
   @override
   Widget build(BuildContext context) {
     double newPrice;
-    widget.discont
-        ? newPrice = (1 - ((double.parse(widget.discontAmount)) / 100)) *
-            (double.parse(widget.price))
-        : newPrice = 0;
+    if (widget.discont) {
+      if (widget.discontAmount == "") {
+        widget.discontAmount = "0";
+      } else {
+        widget.discontAmount = widget.discontAmount;
+      }
+      newPrice = (1 - ((double.parse(widget.discontAmount)) / 100)) *
+          (double.parse(widget.price));
+    } else {
+      newPrice = 0;
+    }
 
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       width: double.infinity,
       height: 170,
       padding: const EdgeInsets.all(10),

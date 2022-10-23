@@ -157,10 +157,11 @@ class _UpdatingButtonState extends State<UpdatingButton> {
                         flex: widget.wantDiscont ? 2 : 99,
                         child: customTextField(
                             theFormater: [
-                              FilteringTextInputFormatter.digitsOnly
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[0-9.]')),
                             ],
                             TheController: price,
-                            hint: "Price",
+                            hint: "Price in JOD",
                             visbleText: false,
                             inputType: const TextInputType.numberWithOptions(
                                 decimal: true)),
@@ -173,7 +174,8 @@ class _UpdatingButtonState extends State<UpdatingButton> {
                           child: widget.wantDiscont
                               ? customTextField(
                                   theFormater: [
-                                      FilteringTextInputFormatter.digitsOnly
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      LengthLimitingTextInputFormatter(2)
                                     ],
                                   TheController: discontAmount,
                                   hint: "Discont amount",

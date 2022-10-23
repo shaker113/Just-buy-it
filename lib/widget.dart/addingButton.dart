@@ -138,10 +138,11 @@ class _AddingState extends State<Adding> {
                           flex: wantDiscont ? 2 : 99,
                           child: customTextField(
                               theFormater: [
-                                FilteringTextInputFormatter.digitsOnly
+                                FilteringTextInputFormatter.allow(
+                                    RegExp('[0-9.]')),
                               ],
                               TheController: price,
-                              hint: "Price",
+                              hint: "Price in JOD",
                               visbleText: false,
                               inputType: const TextInputType.numberWithOptions(
                                   decimal: true)),
@@ -154,7 +155,8 @@ class _AddingState extends State<Adding> {
                             child: wantDiscont
                                 ? customTextField(
                                     theFormater: [
-                                        FilteringTextInputFormatter.digitsOnly
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        LengthLimitingTextInputFormatter(2)
                                       ],
                                     TheController: discontAmount,
                                     hint: "Discont amount",
