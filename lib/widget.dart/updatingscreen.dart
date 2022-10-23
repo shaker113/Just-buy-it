@@ -61,8 +61,6 @@ class _UpdatingButtonState extends State<UpdatingButton> {
   Widget build(BuildContext context) {
     TextEditingController name = TextEditingController();
     name.text = widget.name;
-    TextEditingController imageLink = TextEditingController();
-    imageLink.text = widget.imageLink;
     TextEditingController price = TextEditingController();
     price.text = widget.price;
     TextEditingController discontAmount = TextEditingController();
